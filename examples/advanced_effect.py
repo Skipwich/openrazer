@@ -27,7 +27,7 @@ effects = [
     'wave',
 ]
 
-# Helper funciton to generate interesting colors
+# Helper function to generate interesting colors
 
 
 def random_color():
@@ -41,6 +41,9 @@ for device in device_manager.devices:
     device_effects = [effect for effect in effects if device.fx.has(effect)]
     # print("{} supports {}".format(device.name, device_effects))
 
+    if len(device_effects) == 0:
+        print("Device {} doesn't support any of the effects".format(device.name))
+        continue
     effect = random.choice(device_effects)
     print("Setting {} to effect {}".format(device.name, effect))
 

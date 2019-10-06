@@ -12,102 +12,35 @@
 #ifndef __HID_RAZER_MOUSE_H
 #define __HID_RAZER_MOUSE_H
 
-#ifndef USB_VENDOR_ID_RAZER
-#define USB_VENDOR_ID_RAZER 0x1532
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_OROCHI_2011
 #define USB_DEVICE_ID_RAZER_OROCHI_2011 0x0013
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_NAGA_EPIC
+#define USB_DEVICE_ID_RAZER_DEATHADDER_3_5G 0x0016
 #define USB_DEVICE_ID_RAZER_NAGA_EPIC 0x001F
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_ABYSSUS_1800
 #define USB_DEVICE_ID_RAZER_ABYSSUS_1800 0x0020
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_MAMBA_2012_WIRED
 #define USB_DEVICE_ID_RAZER_MAMBA_2012_WIRED 0x0024
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_MAMBA_2012_WIRELESS
 #define USB_DEVICE_ID_RAZER_MAMBA_2012_WIRELESS 0x0025
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_IMPERATOR // 2012
 #define USB_DEVICE_ID_RAZER_IMPERATOR 0x002F
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_OUROBOROS // 2012
 #define USB_DEVICE_ID_RAZER_OUROBOROS 0x0032
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_TAIPAN // 2016?
 #define USB_DEVICE_ID_RAZER_TAIPAN 0x0034
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_NAGA_HEX_RED
 #define USB_DEVICE_ID_RAZER_NAGA_HEX_RED 0x0036
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_OROCHI_2013
+#define USB_DEVICE_ID_RAZER_DEATHADDER_2013 0x0037
 #define USB_DEVICE_ID_RAZER_OROCHI_2013 0x0039
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_NAGA_2014
 #define USB_DEVICE_ID_RAZER_NAGA_2014 0x0040
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_NAGA_HEX
 #define USB_DEVICE_ID_RAZER_NAGA_HEX 0x0041
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_ABYSSUS
 #define USB_DEVICE_ID_RAZER_ABYSSUS 0x0042
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_DEATHADDER_CHROMA
 #define USB_DEVICE_ID_RAZER_DEATHADDER_CHROMA 0x0043
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_MAMBA_WIRED
 #define USB_DEVICE_ID_RAZER_MAMBA_WIRED 0x0044
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_MAMBA_WIRELESS
 #define USB_DEVICE_ID_RAZER_MAMBA_WIRELESS 0x0045
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_MAMBA_TE_WIRED
 #define USB_DEVICE_ID_RAZER_MAMBA_TE_WIRED 0x0046
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_OROCHI_CHROMA
 #define USB_DEVICE_ID_RAZER_OROCHI_CHROMA 0x0048
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_DIAMONDBACK_CHROMA
 #define USB_DEVICE_ID_RAZER_DIAMONDBACK_CHROMA 0x004C
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_NAGA_HEX_V2
 #define USB_DEVICE_ID_RAZER_NAGA_HEX_V2 0x0050
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_NAGA_CHROMA
 #define USB_DEVICE_ID_RAZER_NAGA_CHROMA 0x0053
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_ABYSSUS_V2
+#define USB_DEVICE_ID_RAZER_DEATHADDER_3500 0x0054
 #define USB_DEVICE_ID_RAZER_ABYSSUS_V2 0x005B
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_DEATHADDER_ELITE
 #define USB_DEVICE_ID_RAZER_DEATHADDER_ELITE 0x005C
-#endif
-
+#define USB_DEVICE_ID_RAZER_ABYSSUS_2000 0x005E
+#define USB_DEVICE_ID_RAZER_LANCEHEAD_TE_WIRED 0x0060
+#define USB_DEVICE_ID_RAZER_DEATHADDER_ESSENTIAL 0x006E
 
 /* Each keyboard report has 90 bytes*/
 #define RAZER_REPORT_LEN 0x5A
@@ -120,13 +53,6 @@
 #define RAZER_MOUSE_WAIT_MAX_US 800
 
 struct razer_mouse_device {
-    //struct input_dev *dev;
-    struct usb_device *usbdev;
-    struct hid_device *hiddev;
-    unsigned char effect;
-    char name[128];
-    char phys[64];
-
     struct usb_device *usb_dev;
     struct mutex lock;
     unsigned char usb_interface_protocol;
@@ -134,11 +60,19 @@ struct razer_mouse_device {
     unsigned short usb_vid;
     unsigned short usb_pid;
 
-    char serial[23];
+    char serial[23]; // Now storing a random serial to be used with old devices that don't support it
 
     unsigned char orochi2011_led;
     unsigned char orochi2011_dpi;
     unsigned short orochi2011_poll;
+
+    // The DeathAdder 3.5G, uses OR logic so need to remember last values. Part of a 4byte payload
+    struct {
+        unsigned char poll;
+        unsigned char dpi;
+        unsigned char profile;
+        unsigned char leds;
+    } da3_5g;
 };
 
 // Mamba Key Location

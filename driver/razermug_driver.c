@@ -54,7 +54,7 @@ int razer_get_report(struct usb_device *usb_dev, struct razer_report *request_re
 struct razer_report razer_send_payload(struct usb_device *usb_dev, struct razer_report *request_report)
 {
     int retval = -1;
-    struct razer_report response_report;
+    struct razer_report response_report = {0};
 
     request_report->crc = razer_calculate_crc(request_report);
 
@@ -65,7 +65,7 @@ struct razer_report razer_send_payload(struct usb_device *usb_dev, struct razer_
         if(response_report.remaining_packets != request_report->remaining_packets ||
            response_report.command_class != request_report->command_class ||
            response_report.command_id.id != request_report->command_id.id) {
-            print_erroneous_report(&response_report, "razermug", "Response doesnt match request");
+            print_erroneous_report(&response_report, "razermug", "Response doesn't match request");
 //        } else if (response_report.status == RAZER_CMD_BUSY) {
 //            print_erroneous_report(&response_report, "razermouse", "Device is busy");
         } else if (response_report.status == RAZER_CMD_FAILURE) {
@@ -191,7 +191,7 @@ static ssize_t razer_attr_write_mode_none(struct device *dev, struct device_attr
 static ssize_t razer_attr_write_mode_blinking(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
 {
     struct razer_mug_device *device = dev_get_drvdata(dev);
-    struct razer_report report_rgb;
+    struct razer_report report_rgb = {0};
     struct razer_report report_effect = razer_chroma_standard_set_led_effect(VARSTORE, BACKLIGHT_LED, 0x01);
     report_effect.transaction_id.id = 0x3F;
 
@@ -237,7 +237,7 @@ static ssize_t razer_attr_write_mode_custom(struct device *dev, struct device_at
 static ssize_t razer_attr_write_mode_static(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
 {
     struct razer_mug_device *device = dev_get_drvdata(dev);
-    struct razer_report report;
+    struct razer_report report = {0};
 
     if(count == 3) {
         report = razer_chroma_standard_matrix_effect_static(VARSTORE, BACKLIGHT_LED, (struct razer_rgb*)&buf[0]);
@@ -281,7 +281,7 @@ static ssize_t razer_attr_write_mode_wave(struct device *dev, struct device_attr
 static ssize_t razer_attr_write_mode_breath(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
 {
     struct razer_mug_device *device = dev_get_drvdata(dev);
-    struct razer_report report;
+    struct razer_report report = {0};
 
     switch(count) {
     case 3: // Single colour mode
@@ -320,7 +320,7 @@ static ssize_t razer_attr_write_mode_breath(struct device *dev, struct device_at
 static ssize_t razer_attr_write_set_key_row(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
 {
     struct razer_mug_device *device = dev_get_drvdata(dev);
-    struct razer_report report;
+    struct razer_report report = {0};
 
     size_t offset = 0;
     unsigned char row_id;
@@ -373,7 +373,7 @@ static ssize_t razer_attr_write_set_key_row(struct device *dev, struct device_at
 }
 
 /**
- * Read device file "serial", doesnt have a proper one so one is generated
+ * Read device file "serial", doesn't have a proper one so one is generated
  *
  * Returns a string
  */
@@ -393,7 +393,7 @@ static ssize_t razer_attr_read_get_firmware_version(struct device *dev, struct d
 {
     struct razer_mug_device *device = dev_get_drvdata(dev);
     struct razer_report report = razer_chroma_standard_get_firmware_version();
-    struct razer_report response_report;
+    struct razer_report response_report = {0};
     report.transaction_id.id = 0x3F;
 
     // Basically some simple caching
@@ -419,7 +419,7 @@ static ssize_t razer_attr_read_get_firmware_version(struct device *dev, struct d
 static ssize_t razer_attr_write_device_mode(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
 {
     struct razer_mug_device *device = dev_get_drvdata(dev);
-    struct razer_report report;
+    struct razer_report report = {0};
 
     if (count != 2) {
         printk(KERN_WARNING "razerkbd: Device mode only takes 2 bytes.");
@@ -439,7 +439,7 @@ static ssize_t razer_attr_read_get_cup_state(struct device *dev, struct device_a
 {
     struct razer_mug_device *device = dev_get_drvdata(dev);
     struct razer_report report = get_razer_report(0x02, 0x81, 0x02);
-    struct razer_report response;
+    struct razer_report response = {0};
 
     mutex_lock(&device->lock);
     response = razer_send_payload(device->usb_dev, &report);
@@ -457,7 +457,7 @@ static ssize_t razer_attr_read_device_mode(struct device *dev, struct device_att
 {
     struct razer_mug_device *device = dev_get_drvdata(dev);
     struct razer_report report = razer_chroma_standard_get_device_mode();
-    struct razer_report response;
+    struct razer_report response = {0};
 
     mutex_lock(&device->lock);
     response = razer_send_payload(device->usb_dev, &report);
@@ -475,7 +475,7 @@ static ssize_t razer_attr_write_set_brightness(struct device *dev, struct device
 {
     struct razer_mug_device *device = dev_get_drvdata(dev);
     unsigned char brightness = 0;
-    struct razer_report report;
+    struct razer_report report = {0};
 
     if(count > 0) {
         brightness = (unsigned char)simple_strtoul(buf, NULL, 10);
@@ -501,7 +501,7 @@ static ssize_t razer_attr_read_set_brightness(struct device *dev, struct device_
 {
     struct razer_mug_device *device = dev_get_drvdata(dev);
     struct razer_report report = razer_chroma_standard_get_led_brightness(VARSTORE, BACKLIGHT_LED);
-    struct razer_report response;
+    struct razer_report response = {0};
 
     mutex_lock(&device->lock);
     response = razer_send_payload(device->usb_dev, &report);
@@ -715,7 +715,7 @@ static void razer_mug_disconnect(struct hid_device *hdev)
  * Creates a keypress event of KEY_PROG1
  *
  * input_report_key generates an event
- * input_sync says were finished, all events are complete. Is useful when setting up other events as they might take multiple statements to complet an event like relative events
+ * input_sync says were finished, all events are complete. Is useful when setting up other events as they might take multiple statements to complete an event like relative events
  *
  * data[1] == 0xa0 if mug is present
  */

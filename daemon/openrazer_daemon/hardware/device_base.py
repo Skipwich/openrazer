@@ -194,7 +194,7 @@ class RazerDevice(DBusService):
         :return: String of the serial number
         :rtype: str
         """
-        # TODO raise exception if serial cant be got and handle during device add
+        # TODO raise exception if serial can't be got and handle during device add
         if self._serial is None:
             serial_path = os.path.join(self._device_path, 'device_serial')
             count = 0
@@ -230,7 +230,7 @@ class RazerDevice(DBusService):
         """
         Get device mode
 
-        :return: String of device mode and arg seperated by colon, e.g. 0:0 or 3:0
+        :return: String of device mode and arg separated by colon, e.g. 0:0 or 3:0
         :rtype: str
         """
         device_mode_path = os.path.join(self._device_path, 'device_mode')
@@ -300,7 +300,8 @@ class RazerDevice(DBusService):
                 new_function = available_functions[method_name]
                 self.logger.debug("Adding %s.%s method to DBus", new_function.interface, new_function.name)
                 self.add_dbus_method(new_function.interface, new_function.name, new_function, new_function.in_sig, new_function.out_sig, new_function.byte_arrays)
-            except KeyError:
+            except KeyError as e:
+                self.logger.warning("Couldn't add method to DBus: %s", e)
                 pass
 
     def suspend_device(self):
@@ -331,7 +332,7 @@ class RazerDevice(DBusService):
 
     def _close(self):
         """
-        To be overrided by any subclasses to do cleanup
+        To be overridden by any subclasses to do cleanup
         """
         # Clear observer list
         self._observer_list.clear()
@@ -394,7 +395,7 @@ class RazerDevice(DBusService):
 
     def notify(self, msg):
         """
-        Recieve observer messages
+        Receive observer messages
 
         :param msg: Tuple with first element a string
         :type msg: tuple

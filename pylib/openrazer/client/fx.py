@@ -366,7 +366,7 @@ class RazerFX(BaseRazerFX):
             return True
         return False
 
-    def ripple(self, red: int, green: int, blue: int, refreshrate: float=c.RIPPLE_REFRESH_RATE) -> bool:
+    def ripple(self, red: int, green: int, blue: int, refreshrate: float = c.RIPPLE_REFRESH_RATE) -> bool:
         """
         Set the Ripple Effect.
 
@@ -407,7 +407,7 @@ class RazerFX(BaseRazerFX):
             return True
         return False
 
-    def ripple_random(self, refreshrate: float=c.RIPPLE_REFRESH_RATE):
+    def ripple_random(self, refreshrate: float = c.RIPPLE_REFRESH_RATE):
         """
         Set the Ripple Effect with random colours
 
@@ -464,7 +464,7 @@ class RazerFX(BaseRazerFX):
             green = clamp_ubyte(green)
             blue = clamp_ubyte(blue)
 
-            self._lighting_dbus.setStarlightSingle(time, red, green, blue)
+            self._lighting_dbus.setStarlightSingle(red, green, blue, time)
 
             return True
         return False
@@ -522,7 +522,7 @@ class RazerFX(BaseRazerFX):
             green2 = clamp_ubyte(green2)
             blue2 = clamp_ubyte(blue2)
 
-            self._lighting_dbus.setStarlightDual(time, red, green, blue, red2, green2, blue2)
+            self._lighting_dbus.setStarlightDual(red, green, blue, red2, green2, blue2, time)
 
             return True
         return False
@@ -553,11 +553,11 @@ class RazerAdvancedFX(BaseRazerFX):
     def __init__(self, serial: str, capabilities: dict, daemon_dbus=None, matrix_dims=(-1, -1)):
         super(RazerAdvancedFX, self).__init__(serial, capabilities, daemon_dbus)
 
-        # Only init'd when theres a matrix
+        # Only init'd when there's a matrix
         self._capabilities = capabilities
 
         if not all([dim >= 1 for dim in matrix_dims]):
-            raise ValueError("Matrix dimenions cannot contain -1")
+            raise ValueError("Matrix dimensions cannot contain -1")
 
         if daemon_dbus is None:
             session_bus = _dbus.SessionBus()
@@ -595,7 +595,7 @@ class RazerAdvancedFX(BaseRazerFX):
 
     def draw(self):
         """
-        Draw whats in the current frame buffer
+        Draw what's in the current frame buffer
         """
         self._draw(bytes(self.matrix))
 
@@ -608,7 +608,7 @@ class RazerAdvancedFX(BaseRazerFX):
                 if row_id < self._matrix_dims[0] and column_id < self._matrix_dims[1]:
                     self._lighting_dbus.setKey(row_id, column_id, [clamp_ubyte(component) for component in rgb])
                 else:
-                    raise ValueError("Row or column out of bounds. Max dimentions are: {0},{1}".format(*self._matrix_dims))
+                    raise ValueError("Row or column out of bounds. Max dimensions are: {0},{1}".format(*self._matrix_dims))
             else:
                 raise ValueError("RGB must be an RGB tuple")
 
@@ -713,6 +713,16 @@ class SingleLed(BaseRazerFX):
             blue = clamp_ubyte(blue)
 
             self._getattr('set#Static')(red, green, blue)
+
+            return True
+        return False
+
+    def wave(self, direction: int) -> bool:
+        if direction not in (c.WAVE_LEFT, c.WAVE_RIGHT):
+            raise ValueError("Direction must be WAVE_RIGHT (0x01) or WAVE_LEFT (0x02)")
+
+        if self._shas('wave'):
+            self._getattr('set#Wave')(direction)
 
             return True
         return False
@@ -893,6 +903,16 @@ class MiscLighting(BaseRazerFX):
         else:
             self._scroll = None
 
+        if self.has('left'):
+            self._left = SingleLed(serial, capabilities, daemon_dbus, 'left')
+        else:
+            self._left = None
+
+        if self.has('right'):
+            self._right = SingleLed(serial, capabilities, daemon_dbus, 'right')
+        else:
+            self._right = None
+
         if self.has('backlight'):
             self._backlight = SingleLed(serial, capabilities, daemon_dbus, 'backlight')
         else:
@@ -905,6 +925,14 @@ class MiscLighting(BaseRazerFX):
     @property
     def scroll_wheel(self):
         return self._scroll
+
+    @property
+    def left(self):
+        return self._left
+
+    @property
+    def right(self):
+        return self._right
 
     @property
     def backlight(self):

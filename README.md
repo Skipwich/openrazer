@@ -6,6 +6,8 @@ A collection of Linux drivers for the Razer devices, providing kernel drivers, D
 
 Also this is the master branch, devices may appear in the tables below but might not be released in package form yet. Check out the stable branch for what _should_ be in the packages.
 
+The below devices are fully feature supported by OpenRazer which means all available USB controllable functions for that product are made available by the library.
+
 ## Device Support
 ### Keyboards
 | Device                                        | USB VID:PID |
@@ -33,16 +35,28 @@ Also this is the master branch, devices may appear in the tables below but might
 | Razer Blade Stealth (Late 2016)               |  1532:0220  |
 | Razer BlackWidow Chroma V2                    |  1532:0221  |
 | Razer Blade (Late 2016)                       |  1532:0224  |
+| Razer Cynosa Chroma                           |  1532:022A  |
 | Razer Blade Stealth (Mid 2017)                |  1532:022D  |
 | Razer Blade Pro (2017)                        |  1532:0225  |
+| Razer Huntsman Elite                          |  1532:0226  |
+| Razer BlackWidow Elite                        |  1532:0228  |
 | Razer Blade Pro FullHD (2017)                 |  1532:022F  |
 | Razer Blade Stealth (Late 2017)               |  1532:0232  |
+| Razer Blade 15 (2018)                         |  1532:0233  |
+| Razer BlackWidow Lite (2018)                  |  1532:0235  |
+| Razer Blade Stealth (2019)                    |  1532:0239  |
+| Razer Blade 15 (2019) Advanced                |  1532:023A  |
+| Razer Blade 15 (2018) Base Model              |  1532:023B  |
+| Razer Blade 15 (2018) Mercury                 |  1532:0240  |
+| Razer BlackWidow (2019)                       |  1532:0241  |
+| Razer Blade 15 (Mid 2019) Mercury             |  1532:0245  |
 
 ### Mice
 | Device                                        | USB VID:PID |
 | --------------------------------------------- | ----------- |
 | Razer Orochi 2011                             |  1532:0013  |
 | Razer Naga Epic                               |  1532:001F  |
+| Razer DeathAdder 3.5G                         |  1532:0016  |
 | Razer Abyssus 1800                            |  1532:0020  |
 | Razer Mamba 2012 (Wired)                      |  1532:0024  |
 | Razer Mamba 2012 (Wireless)                   |  1532:0025  |
@@ -50,6 +64,7 @@ Also this is the master branch, devices may appear in the tables below but might
 | Razer Ouroboros 2012                          |  1532:0032  |
 | Razer Taipan                                  |  1532:0034  |
 | Razer Naga Hex (Red)                          |  1532:0036  |
+| Razer DeathAdder 2013                         |  1532:0037  |
 | Razer Orochi 2013                             |  1532:0039  |
 | Razer Naga 2014                               |  1532:0040  |
 | Razer Naga Hex                                |  1532:0041  |
@@ -62,19 +77,26 @@ Also this is the master branch, devices may appear in the tables below but might
 | Razer Diamondback Chroma                      |  1532:004C  |
 | Razer Naga Hex V2                             |  1532:0050  |
 | Razer Naga Chroma                             |  1532:0053  |
+| Razer DeathAdder 3500                         |  1532:0054  |
 | Razer Abyssus V2                              |  1532:005B  |
 | Razer DeathAdder Elite                        |  1532:005C  |
+| Razer Abyssus 2000                            |  1532:005E  |
+| Razer Lancehead Tournament Edition            |  1532:0060  |
+| Razer DeathAdder Essential                    |  1532:006E  |
 
 ### Mousemats
 | Device                                        | USB VID:PID |
 | --------------------------------------------- | ----------- |
 | Razer Firefly                                 |  1532:0C00  |
+| Razer Goliathus                               |  1532:0C01  |
+| Razer Goliathus Extended                      |  1532:0C02  |
 
 ### Headsets
 | Device                                        | USB VID:PID |
 | --------------------------------------------- | ----------- |
 | Razer Kraken 7.1                              |  1532:0501  |
 | Razer Kraken 7.1 Chroma                       |  1532:0504  |
+| Razer Kraken 7.1                              |  1532:0506  |
 | Razer Kraken 7.1 V2                           |  1532:0510  |
 
 ### Misc
@@ -120,7 +142,7 @@ The following applications complement and interact with this driver:
 * [Polychromatic](https://github.com/polychromatic/polychromatic) - a graphical management tool and tray applet to managing Razer peripherals.
 * [RazerGenie](https://github.com/z3ntu/RazerGenie) - Qt application for configuring your Razer devices under GNU/Linux.
 * [razerCommander](https://github.com/GabMus/razerCommander) - Simple GUI written in Gtk3
-* [Chroma Feedback](https://github.com/redaxmedia/chroma-feedback) - Turn your Razer keyboard, mouse or headphone into a extreme feedback device for Travis CI
+* [Chroma Feedback](https://github.com/redaxmedia/chroma-feedback) - Turn your Razer keyboard, mouse or headphone into a extreme feedback device
 
 ## Contributions
 

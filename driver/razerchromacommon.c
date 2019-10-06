@@ -307,7 +307,7 @@ struct razer_report razer_chroma_standard_matrix_effect_starlight_single(unsigne
     report.arguments[4] = rgb1->g; // Green 1
     report.arguments[5] = rgb1->b; // Blue 1
 
-    // For now havent seen any chroma using this, seen the extended version
+    // For now haven't seen any chroma using this, seen the extended version
     report.arguments[6] = 0x00; // Red 2
     report.arguments[7] = 0x00; // Green 2
     report.arguments[8] = 0x00; // Blue 2
@@ -335,7 +335,6 @@ struct razer_report razer_chroma_standard_matrix_effect_starlight_dual(unsigned 
     report.arguments[4] = rgb1->g; // Green 1
     report.arguments[5] = rgb1->b; // Blue 1
 
-    // For now havent seen any chroma using this, seen the extended version
     report.arguments[6] = rgb2->r; // Red 2
     report.arguments[7] = rgb2->g; // Green 2
     report.arguments[8] = rgb2->b; // Blue 2
@@ -404,7 +403,7 @@ struct razer_report razer_chroma_standard_matrix_effect_breathing_dual(unsigned 
  * Status Trans Packet Proto DataSize Class CMD Args
  * ??
  *
- * Apparently Ultimate2016, Stealth and Stealth2016 need frame id to be 0x00, I dont think its needed (depending on set_custom_frame)
+ * Apparently Ultimate2016, Stealth and Stealth2016 need frame id to be 0x00, I don't think it's needed (depending on set_custom_frame)
  */
 struct razer_report razer_chroma_standard_matrix_effect_custom_frame(unsigned char variable_storage)
 {
@@ -548,7 +547,9 @@ struct razer_report razer_chroma_extended_matrix_effect_wave(unsigned char varia
 {
     struct razer_report report = razer_chroma_extended_matrix_effect_base(0x06, variable_storage, led_id, 0x04);
 
-    direction = clamp_u8(direction, 0x00, 0x01);
+    // Some devices use values 0x00, 0x01
+    // Others use values 0x01, 0x02
+    direction = clamp_u8(direction, 0x00, 0x02);
 
     report.arguments[3] = direction;
     report.arguments[4] = 0x28; // Unknown
@@ -885,7 +886,7 @@ struct razer_report razer_chroma_mouse_extended_matrix_effect_breathing_dual(uns
  * Misc Functions
  */
 /**
- * Toggled wether F1-12 act as F1-12 or if they act as the function options (without Fn pressed)
+ * Toggled whether F1-12 act as F1-12 or if they act as the function options (without Fn pressed)
  *
  * If 0 should mean that the F-keys work as normal F-keys
  * If 1 should mean that the F-keys act as if the FN key is held
@@ -981,7 +982,7 @@ struct razer_report razer_chroma_misc_get_charging_status(void)
 }
 
 /**
- * Set the charging effect, think if I remember correctly, its either static colour, or "whatever the mouse was last on"
+ * Set the charging effect, think if I remember correctly, it's either static colour, or "whatever the mouse was last on"
  */
 struct razer_report razer_chroma_misc_set_dock_charge_type(unsigned char charge_type)
 {
@@ -1154,7 +1155,7 @@ struct razer_report razer_chroma_misc_set_low_battery_threshold(unsigned char ba
 
 struct razer_report razer_chroma_misc_set_orochi2011_led(unsigned char led_bitfield)
 {
-    struct razer_report report;
+    struct razer_report report = {0};
     memcpy(&report, &orochi2011_led, sizeof(orochi2011_led));
 
     // Keep the idle time within bounds
@@ -1165,7 +1166,7 @@ struct razer_report razer_chroma_misc_set_orochi2011_led(unsigned char led_bitfi
 
 struct razer_report razer_chroma_misc_set_orochi2011_poll_dpi(unsigned short poll_rate, unsigned char dpi_x, unsigned char dpi_y)
 {
-    struct razer_report report;
+    struct razer_report report = {0};
     memcpy(&report, &orochi2011_dpi, sizeof(orochi2011_dpi));
 
     switch(poll_rate) {

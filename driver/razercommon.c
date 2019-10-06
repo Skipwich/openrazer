@@ -66,7 +66,7 @@ int razer_send_control_msg(struct usb_device *usb_dev,void const *data, uint rep
  *   Razer BlackWidow Ultimate 2013*
  *   Razer Firefly*
  *
- * Request report is the report sent to the device specifing what response we want
+ * Request report is the report sent to the device specifying what response we want
  * Response report will get populated with a response
  *
  * Returns 0 when successful, 1 if the report length is invalid.
@@ -91,7 +91,7 @@ int razer_get_usb_response(struct usb_device *usb_dev, uint report_index, struct
     // TODO look to see if index needs to be different for the request and the response
     retval = razer_send_control_msg(usb_dev, request_report, report_index, wait_min, wait_max);
 
-    // Now ask for reponse
+    // Now ask for response
     len = usb_control_msg(usb_dev, usb_rcvctrlpipe(usb_dev, 0),
                           request,         // Request
                           request_type,    // RequestType
@@ -101,14 +101,12 @@ int razer_get_usb_response(struct usb_device *usb_dev, uint report_index, struct
                           size,
                           USB_CTRL_SET_TIMEOUT);
 
-    usleep_range(wait_min, wait_max);
-
     memcpy(response_report, buf, sizeof(struct razer_report));
     kfree(buf);
 
     // Error if report is wrong length
     if(len != 90) {
-        printk(KERN_WARNING "razer driver: Invalid USB repsonse. USB Report length: %d\n", len);
+        printk(KERN_WARNING "razer driver: Invalid USB response. USB Report length: %d\n", len);
         result = 1;
     }
 
@@ -142,7 +140,7 @@ unsigned char razer_calculate_crc(struct razer_report *report)
  */
 struct razer_report get_razer_report(unsigned char command_class, unsigned char command_id, unsigned char data_size)
 {
-    struct razer_report new_report;
+    struct razer_report new_report = {0};
     memset(&new_report, 0, sizeof(struct razer_report));
 
     new_report.status = 0x00;
@@ -161,7 +159,7 @@ struct razer_report get_razer_report(unsigned char command_class, unsigned char 
  */
 struct razer_report get_empty_razer_report(void)
 {
-    struct razer_report new_report;
+    struct razer_report new_report = {0};
     memset(&new_report, 0, sizeof(struct razer_report));
 
     return new_report;
@@ -206,7 +204,36 @@ unsigned short clamp_u16(unsigned short value, unsigned short min, unsigned shor
 }
 
 
+int razer_send_control_msg_old_device(struct usb_device *usb_dev,void const *data, uint report_value, uint report_index, uint report_size, ulong wait_min, ulong wait_max)
+{
+    uint request = HID_REQ_SET_REPORT; // 0x09
+    uint request_type = USB_TYPE_CLASS | USB_RECIP_INTERFACE | USB_DIR_OUT; // 0x21
+    char *buf;
+    int len;
 
+    buf = kmemdup(data, report_size, GFP_KERNEL);
+    if (buf == NULL)
+        return -ENOMEM;
+
+    // Send usb control message
+    len = usb_control_msg(usb_dev, usb_sndctrlpipe(usb_dev, 0),
+                          request,      // Request
+                          request_type, // RequestType
+                          report_value, // Value
+                          report_index, // Index
+                          buf,          // Data
+                          report_size,  // Length
+                          USB_CTRL_SET_TIMEOUT);
+
+    // Wait
+    usleep_range(wait_min, wait_max);
+
+    kfree(buf);
+    if(len!=report_size)
+        printk(KERN_WARNING "razer driver: Device data transfer failed.");
+
+    return ((len < 0) ? len : ((len != report_size) ? -EIO : 0));
+}
 
 
 

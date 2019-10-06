@@ -12,21 +12,14 @@
 #ifndef __HID_RAZER_KRAKEN_H
 #define __HID_RAZER_KRAKEN_H
 
-#ifndef USB_VENDOR_ID_RAZER
-#define USB_VENDOR_ID_RAZER 0x1532
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_KRAKEN_CLASSIC // Codename Unknown
+// Codename Unknown
 #define USB_DEVICE_ID_RAZER_KRAKEN_CLASSIC 0x0501
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_KRAKEN // Codename Rainie
+// Codename Rainie
 #define USB_DEVICE_ID_RAZER_KRAKEN 0x0504
-#endif
-
-#ifndef USB_DEVICE_ID_RAZER_KRAKEN_V2 // Codename Kylie
+// Codename Unknown
+#define USB_DEVICE_ID_RAZER_KRAKEN_CLASSIC_ALT 0x0506
+// Codename Kylie
 #define USB_DEVICE_ID_RAZER_KRAKEN_V2 0x0510
-#endif
 
 #define USB_INTERFACE_PROTOCOL_NONE 0
 
@@ -45,7 +38,7 @@ struct razer_kraken_device {
     unsigned short breathing_address[3];
 
     char serial[23];
-    // 3 Bytes, first byte is wether fw version is collected, 2nd byte is major version, 3rd is minor, should be printed out in hex form as are bcd
+    // 3 Bytes, first byte is whether fw version is collected, 2nd byte is major version, 3rd is minor, should be printed out in hex form as are bcd
     unsigned char firmware_version[3];
 
     u8 data[33];
