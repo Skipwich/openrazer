@@ -261,6 +261,9 @@ static ssize_t razer_attr_read_device_type(struct device *dev, struct device_att
 
     case USB_DEVICE_ID_RAZER_NAGA_EPIC:
         device_type = "Razer Naga Epic\n";
+
+    case USB_DEVICE_ID_RAZER_NAGA_2012:
+        device_type = "Razer Naga 2012\n";
         break;
 
     case USB_DEVICE_ID_RAZER_NAGA_2014:
@@ -305,6 +308,10 @@ static ssize_t razer_attr_read_device_type(struct device *dev, struct device_att
 
     case USB_DEVICE_ID_RAZER_NAGA_TRINITY:
         device_type = "Razer Naga Trinity\n";
+        break;
+
+    case USB_DEVICE_ID_RAZER_DEATHADDER_1800:
+        device_type = "Razer Deathadder 1800\n";
         break;
 
     default:
@@ -929,8 +936,10 @@ static ssize_t razer_attr_write_mouse_dpi(struct device *dev, struct device_attr
     case USB_DEVICE_ID_RAZER_NAGA_EPIC:
     case USB_DEVICE_ID_RAZER_NAGA_HEX_RED:
     case USB_DEVICE_ID_RAZER_NAGA_HEX:
+    case USB_DEVICE_ID_RAZER_NAGA_2012:
     case USB_DEVICE_ID_RAZER_ABYSSUS_1800:
     case USB_DEVICE_ID_RAZER_DEATHADDER_2013:
+    case USB_DEVICE_ID_RAZER_DEATHADDER_1800:
         if(count == 1) {
             dpi_x_byte = buf[0];
             dpi_y_byte = buf[0];
@@ -1045,8 +1054,10 @@ static ssize_t razer_attr_read_mouse_dpi(struct device *dev, struct device_attri
     case USB_DEVICE_ID_RAZER_NAGA_EPIC:
     case USB_DEVICE_ID_RAZER_NAGA_HEX_RED:
     case USB_DEVICE_ID_RAZER_NAGA_HEX:
+    case USB_DEVICE_ID_RAZER_NAGA_2012:
     case USB_DEVICE_ID_RAZER_ABYSSUS_1800:
     case USB_DEVICE_ID_RAZER_DEATHADDER_2013:
+    case USB_DEVICE_ID_RAZER_DEATHADDER_1800:
         report = razer_chroma_misc_get_dpi_xy_byte();
         break;
 
@@ -1072,6 +1083,7 @@ static ssize_t razer_attr_read_mouse_dpi(struct device *dev, struct device_attri
     if (device->usb_pid == USB_DEVICE_ID_RAZER_NAGA_HEX ||
         device->usb_pid == USB_DEVICE_ID_RAZER_NAGA_HEX_RED ||
         device->usb_pid == USB_DEVICE_ID_RAZER_NAGA_EPIC ||
+        device->usb_pid == USB_DEVICE_ID_RAZER_NAGA_2012 ||
         device->usb_pid == USB_DEVICE_ID_RAZER_DEATHADDER_2013 ||
         device->usb_pid == USB_DEVICE_ID_RAZER_ABYSSUS_1800) { // NagaHex is crap uses only byte for dpi
         dpi_x = response.arguments[0];
@@ -2890,6 +2902,7 @@ static int razer_mouse_probe(struct hid_device *hdev, const struct hid_device_id
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_logo_led_state);
             break;
 
+        case USB_DEVICE_ID_RAZER_NAGA_2012:
         case USB_DEVICE_ID_RAZER_NAGA_2014:
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_dpi);
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_poll_rate);
@@ -2935,6 +2948,7 @@ static int razer_mouse_probe(struct hid_device *hdev, const struct hid_device_id
             break;
 
         case USB_DEVICE_ID_RAZER_ABYSSUS_1800:
+        case USB_DEVICE_ID_RAZER_DEATHADDER_1800:
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_logo_led_state);
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_poll_rate);
             CREATE_DEVICE_FILE(&hdev->dev, &dev_attr_dpi);
@@ -3214,6 +3228,7 @@ static void razer_mouse_disconnect(struct hid_device *hdev)
             device_remove_file(&hdev->dev, &dev_attr_logo_led_state);
             break;
 
+        case USB_DEVICE_ID_RAZER_NAGA_2012:
         case USB_DEVICE_ID_RAZER_NAGA_2014:
             device_remove_file(&hdev->dev, &dev_attr_dpi);
             device_remove_file(&hdev->dev, &dev_attr_poll_rate);
@@ -3259,6 +3274,7 @@ static void razer_mouse_disconnect(struct hid_device *hdev)
             break;
 
         case USB_DEVICE_ID_RAZER_ABYSSUS_1800:
+        case USB_DEVICE_ID_RAZER_DEATHADDER_1800:
             device_remove_file(&hdev->dev, &dev_attr_logo_led_state);
             device_remove_file(&hdev->dev, &dev_attr_poll_rate);
             device_remove_file(&hdev->dev, &dev_attr_dpi);
@@ -3321,6 +3337,7 @@ static const struct hid_device_id razer_devices[] = {
     { HID_USB_DEVICE(USB_VENDOR_ID_RAZER,USB_DEVICE_ID_RAZER_ABYSSUS_2000) },
     { HID_USB_DEVICE(USB_VENDOR_ID_RAZER,USB_DEVICE_ID_RAZER_DEATHADDER_3_5G) },
     { HID_USB_DEVICE(USB_VENDOR_ID_RAZER,USB_DEVICE_ID_RAZER_NAGA_HEX_RED) },
+    { HID_USB_DEVICE(USB_VENDOR_ID_RAZER,USB_DEVICE_ID_RAZER_NAGA_2012) },
     { HID_USB_DEVICE(USB_VENDOR_ID_RAZER,USB_DEVICE_ID_RAZER_NAGA_2014) },
     { HID_USB_DEVICE(USB_VENDOR_ID_RAZER,USB_DEVICE_ID_RAZER_NAGA_HEX) },
     { HID_USB_DEVICE(USB_VENDOR_ID_RAZER,USB_DEVICE_ID_RAZER_MAMBA_2012_WIRED) },
@@ -3346,6 +3363,7 @@ static const struct hid_device_id razer_devices[] = {
     { HID_USB_DEVICE(USB_VENDOR_ID_RAZER,USB_DEVICE_ID_RAZER_LANCEHEAD_TE_WIRED) },
     { HID_USB_DEVICE(USB_VENDOR_ID_RAZER,USB_DEVICE_ID_RAZER_NAGA_TRINITY) },
     { HID_USB_DEVICE(USB_VENDOR_ID_RAZER,USB_DEVICE_ID_RAZER_DEATHADDER_ESSENTIAL) },
+    { HID_USB_DEVICE(USB_VENDOR_ID_RAZER,USB_DEVICE_ID_RAZER_DEATHADDER_1800) },
     { }
 };
 
