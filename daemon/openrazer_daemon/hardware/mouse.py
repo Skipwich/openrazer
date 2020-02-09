@@ -1341,7 +1341,7 @@ class RazerDeathAdderEssential(__RazerDeviceSpecialBrightnessSuspend):
 
 class RazerNagaEpic(__RazerDevice):
     """
-    Class for the Razer Naga Hex
+    Class for the Razer Naga Epic
     """
     EVENT_FILE_REGEX = re.compile(r'.*Razer_Razer_Naga_Epic-if01-event-kbd')
 
@@ -1386,6 +1386,7 @@ class RazerNagaEpic(__RazerDevice):
         self.disable_notify = True
         _da_set_scroll_brightness(self, scroll_brightness)
         self.disable_notify = False
+
 class RazerDeathAdder1800(__RazerDevice):
     """
     Class for the Razer DeathAdder 1800
